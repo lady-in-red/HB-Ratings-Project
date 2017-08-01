@@ -23,6 +23,11 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<User user_id=%s email=%s>" % (self.user_id, self.email)
+
 
 # Put your Movie and Rating model classes here.
 
@@ -32,9 +37,15 @@ class Movie(db.Model):
     __tablename__ = 'movies'
 
     movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    title = db.Column(db.String(64)) # null is default, explicit
-    released_at = db.Column(db.DateTime)
-    imdb_url = db.Column(db.String(400)) # how long is too long?, nullable?
+    title = db.Column(db.String(64), nullable=False)
+    released_at = db.Column(db.DateTime, nullable=False)
+    imdb_url = db.Column(db.String(400), nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<User movie_id=%s title=%s>" % (self.movie_id, self.title)
+
 
 class Rating(db.Model):
     """User movie ratings."""
@@ -42,10 +53,15 @@ class Rating(db.Model):
     __tablename__ = 'ratings'
 
     rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    movie_id = db.Column(db.Integer, ForeignKey('movie.movie_id'))
-    user_id = db.Column(db.Integer, ForeignKey('user.user_id'))
-    score = db.Columnn(db.Integer)
+    movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
 
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<User rating_id=%s score=%s>" % (self.rating_id, self.score)
 
 ##############################################################################
 # Helper functions
