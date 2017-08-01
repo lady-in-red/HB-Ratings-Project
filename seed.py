@@ -48,11 +48,14 @@ def load_movies():
     # Read u.item file and insert data
     for row in open("seed_data/u.item"):
         row = row.rstrip()
-        movie_id, title, released_str, imdb_url = row.split("|")
+        row = row[:-38]
+        movie_id, title, released_str, video_date, imdb_url = row.split("|")
         if released_str:
             released_at = datetime.strptime(released_str, "%d-%b-%Y")
         else:
             released_at = None
+        if '(' in title:
+            title = title[:-7]
 
         movie = Movie(movie_id=movie_id,
                       title=title,
@@ -76,12 +79,11 @@ def load_ratings():
     Rating.query.delete()
 
     # Read u.data file and insert data
-    for row in open("seed_data/u.item"):
+    for row in open("seed_data/u.data"):
         row = row.rstrip()
-        rating_id, movie_id, user_id, score = row.split("|")
+        user_id, movie_id, score, timestamp = row.split("\t")
 
-        rating = Rating(rating_id=rating_id,
-                        movie_id=movie_id,
+        rating = Rating(movie_id=movie_id,
                         user_id=user_id,
                         score=score)
 
