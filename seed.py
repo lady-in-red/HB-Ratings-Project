@@ -54,7 +54,8 @@ def load_movies():
             released_at = datetime.strptime(released_str, "%d-%b-%Y")
         else:
             released_at = None
-        if '(' in title:
+        # in prof life, use regex here V
+        if title[-6] == '(' and title[-1] == ')':
             title = title[:-7]
 
         movie = Movie(movie_id=movie_id,
