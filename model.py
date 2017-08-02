@@ -60,12 +60,12 @@ class Rating(db.Model):
     score = db.Column(db.Integer, nullable=False)
 
     # define relationship to user
-    user = db.relationship('User', backref=db.backref('ratings',
+    user = db.relationship('User', backref=db.backref('ratings_zztop',
                                                        order_by=rating_id))
 
     # define relationship to movie
     movie = db.relationship('Movie',
-                            backref=db.backref('ratings',
+                            backref=db.backref('ratings_zztop',
                                                 order_by=rating_id))
 
     def __repr__(self):
