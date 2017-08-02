@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, jsonify, redirect, flash, session)
+from flask import (Flask, render_template, jsonify, redirect, flash, session, request)
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, Rating, Movie
@@ -41,20 +41,39 @@ def register_user():
     return render_template('registration-form.html')
 
 
-@app.route('/get-reg', methods="POST")
+@app.route('/get-reg', methods=["POST"])
 def input_user_reg():
     """Adds user to db"""
 
+    # grabbing form data
     user_email = request.form.get('user_email')
     user_pass = request.form.get('user_password')
 
-    if not User.query.filter_by(email='user_email').first() and User.query.filter_by(password='user_pass').first():
-        
-
+    # is user in db?
+    if not User.query.filter_by(email=user_email).first():
+        user_email = User(email=user_email, password=user_pass)
+        db.session.add(user_email)
+        db.session.commit()
+        flash('You have registered!')
     else:
-        flash('Login successful')
+        flash('You have registered before, but we\'ll log you in!')
+        # grab user_id + add it to session
 
     return redirect('/')
+
+    # look in db to see if email + pass in db
+    # IF not, add user data to db, grab db user_id, create session with that id
+        # log in, flash homepage
+    # IF grab db user_id and set session with that id as session[user_id] = 'boo')
+        # flash Login successful
+        # redirect to homepage
+
+    #log out
+        # remove session[user_id] from session
+        # flash logged out
+        # redirect to main page
+    
+
 
 
 if __name__ == "__main__":

@@ -5,6 +5,18 @@
 </head>
 
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div>
+            <ul>
+                {% for message in messages %}
+                    <li>{{message}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% endif %}
+    {% endwith %}
   Ratings
   <hr>
 
