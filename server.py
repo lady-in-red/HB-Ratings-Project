@@ -48,6 +48,17 @@ def input_user_reg():
     # grabbing form data
     user_email = request.form.get('user_email')
     user_pass = request.form.get('user_password')
+    age = int(request.form["age"])
+    zipcode = request.form["zipcode"]
+
+    new_user = User(email=email, password=password, age=age, zipcode=zipcode)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    flash("User %s added." % email)
+    return redirect("/")
+
 
     # is user in db?
     if not User.query.filter_by(email=user_email).first():
@@ -70,6 +81,38 @@ def input_user_reg():
     return redirect('/')
 
 
+
+
+@app.route('/login', methods=['GET'])
+def login_form():
+    """Show login form."""
+
+    return render_template("login_form.html")
+
+
+@app.route('/login', methods=['POST'])
+def login_process():
+    """Process login."""
+
+    # Get form variables
+    email = request.form["email"]
+    password = request.form["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        flash("No such user")
+        return redirect("/login")
+
+    if user.password != password:
+        flash("Incorrect password")
+        return redirect("/login")
+
+    session["user_id"] = user.user_id
+
+    flash("Logged in")
+    return redirect("/users/%s" % user.user_id)
+
 ### added route that redirects to homepage with flash message
 @app.route('/log_out')
 def logging_out():
@@ -80,21 +123,65 @@ def logging_out():
 
     return redirect('/')
 
+
 @app.route('/users/<int:user_id>')
 def show_user_data(user_id):
     """Retrun page showing user data, including ratings"""
 
     user = User.query.get(user_id)
-    # user_id = user.user_id
-    # age = user.age
-    # zipcode = user.zipcode
-    # user_ratings = user.ratings
 
     return render_template('/user_page.html', user=user)
-    #                                           age=age,
-    #                                           zipcode=zipcode,
-    #                                           user_ratings=user_ratings)
 
+
+
+@app.route("/movies/<int:movie_id>", methods=['GET'])
+def movie_detail(movie_id):
+    """Show info about movie.
+
+    If a user is logged in, let them add/edit a rating.
+    """
+
+    movie = Movie.query.get(movie_id)
+
+    user_id = session.get("user_id")
+
+    if user_id:
+        user_rating = Rating.query.filter_by(
+            movie_id=movie_id, user_id=user_id).first()
+
+    else:
+        user_rating = None
+
+    return render_template("movie.html",
+                           movie=movie,
+                           user_rating=user_rating)
+
+
+@app.route("/movies/<int:movie_id>", methods=['POST'])
+def movie_detail_process(movie_id):
+    """Add/edit a rating."""
+
+    # Get form variables
+    score = int(request.form["score"])
+
+    user_id = session.get("user_id")
+    if not user_id:
+        raise Exception("No user logged in.")
+
+    rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+
+    if rating:
+        rating.score = score
+        flash("Rating updated.")
+
+    else:
+        rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
+        flash("Rating added.")
+        db.session.add(rating)
+
+    db.session.commit()
+
+    return redirect("/movies/%s" % movie_id)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

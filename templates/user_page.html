@@ -10,20 +10,18 @@
 <br/>
 
 <h2>Movie Ratings</h2>
-    {% if user_ratings %}
+    {% if user.ratings %}
     <div>
         <ul>
-            {% for rating in user_ratings %}
+            {% for rating in user.ratings %}
                 <li>Score: {{ rating.score }}, 
                     <a href="/movies/{{ rating.movie_id }}">{{ rating.movie.title }}</a>
                 </li>
             {% endfor %}
         </ul>
         </div>
-    {% endif %}
-
-    {% if not user_ratings %}
+    {% else %}
         <div><h3>No ratings have been added.<h3></div>
-    {% endblock%}
+    {% endif %}
 
 {% endblock%}
