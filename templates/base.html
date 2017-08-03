@@ -5,6 +5,14 @@
 </head>
 
 <body>
+{% if "user_id" in session %}
+    <a href="/logout">Logout</a>
+{% else %}
+    <a href="/login">Login</a>
+{% endif %}
+
+<hr>
+
     {% with messages = get_flashed_messages() %}
         {% if messages %}
         <div>

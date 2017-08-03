@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Register</h1>
+
+<form action="/get_reg" method="POST" id='user_reg'>
+    <div>
+        <label>
+            What is your email? 
+            <input type="email" name="user_email">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            Select a password: 
+            <input type="password" name="user_password">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            What is your age? 
+            <input type="number" name="age">
+        </label>
+    </div>
+
+    <div>
+        <label>
+            What is your zipcode? 
+            <input type="text" name="zipcode">
+        </label>
+    </div>
+
+    <div>
+        <input type="submit" value="Register">
+    </div>
+    <div><input type="submit" value="Register Now!"></div>
+</form>
+
+
+{% endblock %}

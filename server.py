@@ -34,11 +34,11 @@ def user_list():
     return render_template('user_list.html', users=users_all)
 
 
-@app.route('/registration_form')
+@app.route('/register', methods=['GET'])
 def register_user():
-    """Creates a login for user"""
+    """Shows a login for user with a form"""
 
-    return render_template('registration_form.html')
+    return render_template('register_form.html')
 
 
 @app.route('/get_reg', methods=["POST"])
@@ -80,20 +80,20 @@ def logging_out():
 
     return redirect('/')
 
-@app.route('/<user_id>')
-def user_page():
-    """Contains user data on one page"""
+@app.route('/users/<int:user_id>')
+def show_user_data(user_id):
+    """Retrun page showing user data, including ratings"""
 
-    user = User.query.filter_by(user_id=user_id)
-    user_id = user.user_id
-    age = user.age
-    zipcode = user.zipcode
-    user_ratings = user.ratings
+    user = User.query.get(user_id)
+    # user_id = user.user_id
+    # age = user.age
+    # zipcode = user.zipcode
+    # user_ratings = user.ratings
 
-    return render_template('/user_page.html', user_id=user_id,
-                                              age=age,
-                                              zipcode=zipcode,
-                                              user_ratings=user_ratings)
+    return render_template('/user_page.html', user=user)
+    #                                           age=age,
+    #                                           zipcode=zipcode,
+    #                                           user_ratings=user_ratings)
 
 
 if __name__ == "__main__":
