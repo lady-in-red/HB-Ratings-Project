@@ -84,10 +84,11 @@ def logging_out():
 def user_page():
     """Contains user data on one page"""
 
-    user_id = User.query
-    age = 
-    zipcode = 
-    user_ratings =
+    user = User.query.filter_by(user_id=user_id)
+    user_id = user.user_id
+    age = user.age
+    zipcode = user.zipcode
+    user_ratings = user.ratings
 
     return render_template('/user_page.html', user_id=user_id,
                                               age=age,
