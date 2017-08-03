@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{ email }}</h1>
+
+<h3>User info</h3>
+<p>Age: {{ age }}</p>
+<p>Zipcode: {{ zipcode }}</p>
+<br/>
+<h3>Movie Ratings</h3>
+{% if user_ratings %}
+    <div>
+        <ul>
+            {% for score, rate in enumerate(user_ratings) %}
+                <li>Score: {{ score }}, {{rate}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endif %}
+
+{% endblock%}

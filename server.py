@@ -34,14 +34,14 @@ def user_list():
     return render_template('user_list.html', users=users_all)
 
 
-@app.route('/registration-form')
+@app.route('/registration_form')
 def register_user():
     """Creates a login for user"""
 
-    return render_template('registration-form.html')
+    return render_template('registration_form.html')
 
 
-@app.route('/get-reg', methods=["POST"])
+@app.route('/get_reg', methods=["POST"])
 def input_user_reg():
     """Adds user to db"""
 
@@ -51,28 +51,25 @@ def input_user_reg():
 
     # is user in db?
     if not User.query.filter_by(email=user_email).first():
-        user_email = User(email=user_email, password=user_pass)
-        db.session.add(user_email)
+        user = User(email=user_email, password=user_pass)
+        db.session.add(user)
         db.session.commit()
         flash('You have registered!')
     else:
-        flash('You have registered before, but we\'ll log you in!')
+        if User.query.filter_by(password=user_pass).first():
+            session['user_email'] = user_email
+            flash('You have registered before, but we\'ll log you in!')
+        else:
+            flash('Oops, try again!')
+            return redirect('/registration_form')
         # grab user_id + add it to session
+            # add userId to session
+    ### added session
+    session['user_email'] = user_email
 
     return redirect('/')
 
-    # look in db to see if email + pass in db
-    # IF not, add user data to db, grab db user_id, create session with that id
-        # log in, flash homepage
-    # IF grab db user_id and set session with that id as session[user_id] = 'boo')
-        # flash Login successful
-        # redirect to homepage
 
-    #log out
-        # remove session[user_id] from session
-        # flash logged out
-        # redirect to main page
-    
 
 
 
