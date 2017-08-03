@@ -70,7 +70,29 @@ def input_user_reg():
     return redirect('/')
 
 
+### added route that redirects to homepage with flash message
+@app.route('/log_out')
+def logging_out():
+    """ Logs the user out once clicked"""
 
+    session.clear()
+    flash('You have logged out.')
+
+    return redirect('/')
+
+@app.route('/<user_id>')
+def user_page():
+    """Contains user data on one page"""
+
+    user_id = User.query
+    age = 
+    zipcode = 
+    user_ratings =
+
+    return render_template('/user_page.html', user_id=user_id,
+                                              age=age,
+                                              zipcode=zipcode,
+                                              user_ratings=user_ratings)
 
 
 if __name__ == "__main__":
